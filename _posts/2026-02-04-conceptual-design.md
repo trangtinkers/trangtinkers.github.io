@@ -2,6 +2,7 @@
 layout: post
 title:  "How to build software you actually use"
 date:   2026-02-04
+categories: jekyll update
 ---
 
 The bridge between these ideas could be that good conceptual design helps you identify what "form" (in software) appropriately fits a given "context" (the user's needs, workflow, existing mental models). By clearly articulating concepts and their purposes, you're essentially:
