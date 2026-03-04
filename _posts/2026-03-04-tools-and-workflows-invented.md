@@ -40,7 +40,7 @@ categories: jekyll update
 
 ## Workflows Developed
 
-1. **REPL + Claude Code learning loop** (DrRacket + timed Büropark sessions) — Jan 15 onward, sustained. "REPL-based interactive development might solve my problem with slow feedback loops."
+1. **REPL + Claude Code learning loop** (DrRacket + timed work sessions) — Jan 15 onward, sustained. "REPL-based interactive development might solve my problem with slow feedback loops."
 
 2. **`uv` Python project workflow** — adopted Jan 23, ongoing. Figured out through trial and error: `uv init` → `uv add` → `uv sync` → `uv run`.
 
