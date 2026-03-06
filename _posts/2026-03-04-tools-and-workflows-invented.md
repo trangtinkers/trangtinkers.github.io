@@ -5,6 +5,8 @@ date: 2026-03-04
 categories: jekyll update
 ---
 
+[Dynamicland](https://dynamicland.org/) is still my guiding north star — the idea that computation should be a seeing tool, something that makes invisible structure visible and shareable. That principle shaped everything I built this quarter.
+
 ## Code Shipped
 
 | Item | Date | Status |
