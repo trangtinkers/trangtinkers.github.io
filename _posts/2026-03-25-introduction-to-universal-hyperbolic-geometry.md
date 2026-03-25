@@ -11,7 +11,7 @@ What really made UHG click for me was this lecture:
 
 This lecture basically explains this [paper](https://web.maths.unsw.edu.au/~norman/papers/AffineProjArXiV.pdf) visually.
 
-$\mathbb{F}^2 \quad v=(x, y) \quad A=\left(\begin{array}{ll}a & b \\ b & c\end{array}\right)$ fixed
+$$\mathbb{F}^2 \quad v=(x, y) \quad A=\left(\begin{array}{ll}a & b \\ b & c\end{array}\right)$$ fixed
 then define
 
 $$
