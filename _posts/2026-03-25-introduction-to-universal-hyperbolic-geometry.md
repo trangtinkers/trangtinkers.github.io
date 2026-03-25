@@ -11,6 +11,8 @@ What really made UHG click for me was this lecture:
 
 This lecture basically explains this [paper](https://web.maths.unsw.edu.au/~norman/papers/AffineProjArXiV.pdf) visually.
 
+## Starting out with two dimensions
+
 $$\mathbb{F}^2 \quad v=(x, y) \quad A=\left(\begin{array}{ll}a & b \\ b & c\end{array}\right)$$ fixed
 then define
 
@@ -24,8 +26,7 @@ b & c
 \end{aligned}
 $$
 
-- multiplying a matrix by a row vector
-## 3D
+## Generalizing to 3D
 
 ![null-cone.png](/assets/images/null-cone.png)
 
