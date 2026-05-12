@@ -1,0 +1,340 @@
+---
+layout: post
+title:  "Counting Meets: 15 buckets × 3 = 45"
+date:   2026-05-12
+categories: math
+---
+
+<style>
+  .meets-buckets { color: #222; line-height: 1.5; }
+  .meets-buckets h2 {
+    font-size: 1.15rem;
+    margin-top: 2.8rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3rem;
+    font-weight: 500;
+  }
+  .meets-buckets .panel {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem 1.2rem;
+    margin: 1.2rem 0;
+    border-radius: 6px;
+  }
+  .meets-buckets .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .meets-buckets .bucket {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: .6rem;
+    background: #fff;
+  }
+  .meets-buckets .bucket-label {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: .3rem;
+    font-size: .95rem;
+  }
+  .meets-buckets .bucket-label .complement { color: #aaa; }
+  .meets-buckets .meets-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .2rem;
+  }
+  .meets-buckets .meet { text-align: center; }
+  .meets-buckets .meet-label {
+    font-size: .7rem;
+    color: #444;
+    font-family: monospace;
+  }
+  .meets-buckets svg { display: block; margin: 0 auto; }
+  .meets-buckets .node { fill: #333; }
+  .meets-buckets .node-label { font-size: 10px; fill: #fff; text-anchor: middle; dominant-baseline: central; font-family: sans-serif; }
+  .meets-buckets .edge-meet { stroke-width: 2.5; }
+  .meets-buckets .edge-meet.a { stroke: #c0392b; }
+  .meets-buckets .edge-meet.b { stroke: #2980b9; }
+  .meets-buckets .edge-complement { stroke: #bbb; stroke-width: 1.5; stroke-dasharray: 3,3; }
+  .meets-buckets .proof {
+    background: #f3f0e8;
+    padding: 1rem 1.2rem;
+    border-left: 4px solid #8a7;
+    border-radius: 0 6px 6px 0;
+    margin: 1.2rem 0;
+  }
+  .meets-buckets table { border-collapse: collapse; margin: .5rem 0; }
+  .meets-buckets td, .meets-buckets th { border: 1px solid #ccc; padding: .3rem .6rem; text-align: left; }
+  .meets-buckets code { background: #f0eee5; padding: 1px 4px; border-radius: 3px; font-size: .9em; }
+  .meets-buckets .counter {
+    font-size: 1.4rem;
+    text-align: center;
+    padding: .5rem;
+    background: #efe;
+    border: 1px solid #aca;
+    border-radius: 6px;
+    margin: 1rem 0;
+  }
+</style>
+
+<div class="meets-buckets">
+
+<p>A <b>meet</b> is a 2-set of non-incident edges — two edges that share no node — on six nodes. The claim is that there are exactly 45 meets. The argument has two parts:</p>
+<ol>
+  <li><b>Sorting.</b> Sort every meet into one of 15 buckets, one per edge.</li>
+  <li><b>Counting.</b> Show each bucket has exactly 3 meets.</li>
+</ol>
+<p>If the sorting puts every meet into exactly one bucket — no meet skipped, no meet in two buckets — then the total is just <code>15 × 3 = 45</code>.</p>
+
+<h2>The sorting rule</h2>
+
+<div class="panel">
+  <p>Given any meet <code>e₁ · e₂</code>, the two edges use 4 different nodes. The <b>remaining 2 nodes</b> form a third edge, which I'll call the <b>complement</b>. That complement is the bucket label.</p>
+  <p>Example: the meet <code>1-2 · 3-4</code> uses nodes {1,2,3,4}. The leftover nodes are {5,6}, so the complement edge is <code>5-6</code>. This meet goes in bucket <b>5-6</b>.</p>
+
+  <div style="display:flex; justify-content:center; gap: 2rem; align-items: center; margin: 1rem 0;">
+    <div style="text-align:center;">
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <g id="example1"></g>
+      </svg>
+      <div style="font-family: monospace; font-size: .9rem;">meet <b>1-2 · 3-4</b><br/>complement: <span style="color:#888;">5-6</span></div>
+    </div>
+  </div>
+</div>
+
+<h2>Why each meet lands in <i>exactly one</i> bucket</h2>
+
+<div class="proof">
+  <p><b>The complement is unique.</b> Given a meet, the 4 nodes it uses are fixed, so the 2 leftover nodes are fixed, so the complement edge is fixed. There is no choice involved. One meet → one complement → one bucket.</p>
+  <p>This means:</p>
+  <ul>
+    <li><b>No meet is in two buckets</b> — its complement is uniquely determined, so it goes to <i>only</i> that bucket.</li>
+  </ul>
+</div>
+
+<h2>Why the construction misses no meets</h2>
+
+<div class="proof">
+  <p>The argument above rules out one failure mode (a meet appearing in two buckets). The other failure mode is a meet appearing in <i>zero</i> buckets — being missed entirely. To rule that out, take an arbitrary meet and trace it through the construction.</p>
+
+  <p>Pick any meet — say <code>2-5 · 3-6</code>. Where does it show up?</p>
+
+  <div style="display:flex; justify-content:center; gap: 2rem; align-items: center; margin: 1rem 0;">
+    <div style="text-align:center;">
+      <svg width="180" height="180" viewBox="0 0 180 180">
+        <g id="trace-input"></g>
+      </svg>
+      <div style="font-family: monospace; font-size: .9rem;">meet <b>2-5 · 3-6</b><br/>complement: <span style="color:#888;">1-4</span></div>
+    </div>
+  </div>
+
+  <ol>
+    <li>This meet uses nodes {2, 3, 5, 6}.</li>
+    <li>The leftover nodes are {1, 4}, so its complement edge is <code>1-4</code>.</li>
+    <li>The construction visits all 15 edges, so it visits <code>1-4</code>. When it does, it generates the 3 pair-ups of the 4 leftover nodes {2, 3, 5, 6}:</li>
+  </ol>
+
+  <div style="display:flex; justify-content:center; gap: 1rem; margin: 1rem 0;">
+    <div style="text-align:center; font-family: monospace;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="trace-a"></g></svg>
+      2-3 · 5-6
+    </div>
+    <div style="text-align:center; font-family: monospace; background: #ffe; padding: .4rem; border-radius: 4px;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="trace-b"></g></svg>
+      <b>2-5 · 3-6</b> ←
+    </div>
+    <div style="text-align:center; font-family: monospace;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="trace-c"></g></svg>
+      2-6 · 3-5
+    </div>
+  </div>
+
+  <p>Our meet <code>2-5 · 3-6</code> is the middle one. The construction <b>produces</b> it — we didn't have to know about it in advance, and we didn't have to search for it. It fell out automatically when we processed bucket <code>1-4</code>.</p>
+
+  <p><b>The general argument.</b> Take <i>any</i> meet M:</p>
+  <ol>
+    <li>M consists of two disjoint edges, so M uses exactly 4 of the 6 nodes.</li>
+    <li>The 2 leftover nodes form an edge e — the complement.</li>
+    <li>The construction visits e (it visits all 15 edges, no exceptions).</li>
+    <li>When it visits e, it generates <i>every</i> way to pair up the 4 leftover nodes into 2 pairs.</li>
+    <li>M is one of those pair-ups — because that's literally what M is: two disjoint edges on those 4 leftover nodes.</li>
+  </ol>
+  <p>So M must be produced. Since M was an arbitrary meet, every meet is produced.</p>
+
+  <table style="margin: 1rem auto;">
+    <tr>
+      <th>Concern</th>
+      <th>Why it can't happen</th>
+    </tr>
+    <tr>
+      <td>A meet ends up in <b>two</b> buckets (counted twice)</td>
+      <td>A meet has only one complement, so only one bucket matches.</td>
+    </tr>
+    <tr>
+      <td>A meet ends up in <b>zero</b> buckets (missed)</td>
+      <td>A meet always has a complement, and the bucket for that complement always generates it.</td>
+    </tr>
+  </table>
+
+  <p>Together: every meet appears in <b>exactly one</b> bucket. The buckets partition the meets.</p>
+</div>
+
+<h2>Why each bucket has exactly 3 meets</h2>
+
+<div class="panel">
+  <p>Fix a bucket — say bucket <code>5-6</code>. The meets in it use only the 4 leftover nodes {1,2,3,4}. So the question becomes: <b>in how many ways can we split 4 nodes into 2 pairs?</b></p>
+  <p>Pick node 1. It must pair with one of {2, 3, 4} — that's 3 choices. The remaining 2 nodes are then forced into the second pair. So <b>3 splits</b>:</p>
+  <div style="display:flex; justify-content:center; gap: 1rem; margin: 1rem 0;">
+    <div style="text-align:center; font-family: monospace;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="ex-a"></g></svg>
+      1-2 · 3-4
+    </div>
+    <div style="text-align:center; font-family: monospace;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="ex-b"></g></svg>
+      1-3 · 2-4
+    </div>
+    <div style="text-align:center; font-family: monospace;">
+      <svg width="140" height="140" viewBox="0 0 180 180"><g id="ex-c"></g></svg>
+      1-4 · 2-3
+    </div>
+  </div>
+  <p>This is the same calculation no matter which edge is the bucket label — it always reduces to "split 4 leftover nodes into 2 pairs," which always has 3 answers.</p>
+</div>
+
+<h2>All 15 buckets — the receipts</h2>
+
+<p>Each card is a bucket. The bucket label (the dashed gray edge) is the complement. The two solid colored edges are the actual meet.</p>
+
+<div class="grid" id="buckets"></div>
+
+<div class="counter" id="counter"></div>
+
+<h2>What this argument is <i>not</i> doing</h2>
+
+<div class="panel">
+  <p>This is not a "list everything and count" proof. It's a <b>structural</b> proof: it pairs up two ways of counting the same set.</p>
+  <ul>
+    <li>One way: walk through all meets, find the count directly. (Hard — that's what we're trying to avoid.)</li>
+    <li>The other way: group meets by their complement edge, count each group, then multiply by the number of groups. <code>15 × 3</code>.</li>
+  </ul>
+  <p>Both ways count the same thing — the set of meets — so they must give the same answer. The structural way is easier because the local question ("how many meets share this complement?") has a clean answer (3) that we can compute without enumerating everything.</p>
+  <p>The key step is <b>convincing yourself the sorting rule is well-defined</b>: every meet has a complement, and only one. Once you believe that, the partition is automatic, and 15 × 3 = 45 follows.</p>
+</div>
+
+</div>
+
+<script>
+(function() {
+  const NODES = {
+    1: [90, 20],
+    2: [151, 55],
+    3: [151, 125],
+    4: [90, 160],
+    5: [29, 125],
+    6: [29, 55],
+  };
+
+  function renderDiagram(svgGroupId, meet, complement) {
+    const g = document.getElementById(svgGroupId);
+    if (!g) return;
+    g.innerHTML = "";
+    const svgns = "http://www.w3.org/2000/svg";
+
+    if (complement) {
+      const [a, b] = complement;
+      const [x1, y1] = NODES[a], [x2, y2] = NODES[b];
+      const line = document.createElementNS(svgns, "line");
+      line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+      line.setAttribute("class", "edge-complement");
+      g.appendChild(line);
+    }
+
+    if (meet) {
+      const [e1, e2] = meet;
+      [["a", e1], ["b", e2]].forEach(([cls, edge]) => {
+        const [a, b] = edge;
+        const [x1, y1] = NODES[a], [x2, y2] = NODES[b];
+        const line = document.createElementNS(svgns, "line");
+        line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+        line.setAttribute("class", "edge-meet " + cls);
+        g.appendChild(line);
+      });
+    }
+
+    for (const id of [1,2,3,4,5,6]) {
+      const [x, y] = NODES[id];
+      const c = document.createElementNS(svgns, "circle");
+      c.setAttribute("cx", x); c.setAttribute("cy", y);
+      c.setAttribute("r", 10);
+      c.setAttribute("class", "node");
+      g.appendChild(c);
+      const t = document.createElementNS(svgns, "text");
+      t.setAttribute("x", x); t.setAttribute("y", y);
+      t.setAttribute("class", "node-label");
+      t.textContent = id;
+      g.appendChild(t);
+    }
+  }
+
+  renderDiagram("example1", [[1,2],[3,4]], [5,6]);
+  renderDiagram("ex-a", [[1,2],[3,4]], null);
+  renderDiagram("ex-b", [[1,3],[2,4]], null);
+  renderDiagram("ex-c", [[1,4],[2,3]], null);
+
+  renderDiagram("trace-input", [[2,5],[3,6]], [1,4]);
+  renderDiagram("trace-a", [[2,3],[5,6]], [1,4]);
+  renderDiagram("trace-b", [[2,5],[3,6]], [1,4]);
+  renderDiagram("trace-c", [[2,6],[3,5]], [1,4]);
+
+  const EDGES = [];
+  for (let i = 1; i <= 6; i++)
+    for (let j = i+1; j <= 6; j++)
+      EDGES.push([i,j]);
+
+  function pairings(arr) {
+    const [a, b, c, d] = arr;
+    return [
+      [[a, b], [c, d]],
+      [[a, c], [b, d]],
+      [[a, d], [b, c]],
+    ];
+  }
+
+  function meetLabel(meet) {
+    const [[a,b],[c,d]] = meet;
+    return `${a}-${b} · ${c}-${d}`;
+  }
+
+  const bucketsEl = document.getElementById("buckets");
+  let totalMeets = 0;
+
+  EDGES.forEach((edge, idx) => {
+    const leftover = [1,2,3,4,5,6].filter(n => !edge.includes(n));
+    const meets = pairings(leftover);
+    totalMeets += meets.length;
+
+    const card = document.createElement("div");
+    card.className = "bucket";
+    card.innerHTML = `
+      <div class="bucket-label">Bucket <span class="complement">${edge[0]}-${edge[1]}</span></div>
+      <div class="meets-row">
+        ${meets.map((m, k) => `
+          <div class="meet">
+            <svg width="100%" viewBox="0 0 180 180"><g id="b${idx}-${k}"></g></svg>
+            <div class="meet-label">${meetLabel(m)}</div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    bucketsEl.appendChild(card);
+
+    meets.forEach((m, k) => renderDiagram(`b${idx}-${k}`, m, edge));
+  });
+
+  document.getElementById("counter").textContent =
+    `Total: ${EDGES.length} buckets × 3 meets each = ${totalMeets} meets`;
+})();
+</script>
