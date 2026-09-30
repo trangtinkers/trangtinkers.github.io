@@ -11,6 +11,6 @@ There is no shortcut to insight in pure math research. You pay attention, follow
 
 Small, weird experiments are what expand my mental model. Everyone knows you shouldn't parse HTML with regular expressions, but seeing Postgres do it, and seeing what that syntax looks like, changed my sense of what makes sense to try. That's the case for tinkering over goal-driven work: the payoff is a wider sense of possibility, not the artifact. Much of the skill in building things is knowing what's possible and roughly how, and every answer you collect makes you likelier to spot a problem others haven't thought to attack.
 
-This is also why I don't worry that LLMs make me learn less. Used to run more strange experiments, and as long as I look closely at what happened, they speed up the same loop.
+This style of working allows you to be opportunistic and build software quickly on demand when you need to and when it economically makes sense to do so.
 
 So this is how I work: build small, scrappy tools, learn my environment as I go, and push until I hit constraints, which then shape how I plan the rest of the project.
