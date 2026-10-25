@@ -1,0 +1,72 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import "minima";
+
+// Tufte-style sidenotes, added with {% include sidenote.html id="..." text="..." %}
+.post-content {
+  counter-reset: sidenote-counter;
+}
+
+.sidenote-number {
+  counter-increment: sidenote-counter;
+}
+
+.sidenote-number:after,
+.sidenote:before {
+  content: counter(sidenote-counter);
+  position: relative;
+  vertical-align: baseline;
+  font-size: 0.75em;
+  color: $grey-color;
+}
+
+.sidenote-number:after {
+  top: -0.5em;
+  left: 0.1em;
+}
+
+.sidenote:before {
+  top: -0.4em;
+  margin-right: 0.3em;
+}
+
+.sidenote {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: $grey-color;
+}
+
+input.margin-toggle {
+  display: none;
+}
+
+// Wide screens: float the note into the right margin.
+@media screen and (min-width: 1300px) {
+  .sidenote {
+    float: right;
+    clear: right;
+    width: 220px;
+    margin-right: -260px;
+    margin-top: 0.3rem;
+  }
+}
+
+// Narrow screens: hide the note, tap the number to show it below the line.
+@media screen and (max-width: 1299px) {
+  .sidenote-number {
+    cursor: pointer;
+  }
+
+  .sidenote {
+    display: none;
+  }
+
+  .margin-toggle:checked + .sidenote {
+    display: block;
+    margin: 0.75rem 0 0.75rem 1rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid $grey-color-light;
+  }
+}
