@@ -7,7 +7,7 @@ categories: jekyll update
 
 I'd say math is some kind of Dynamicland, in the sense that it is part of the fabric of reality, to make sense of reality itself. For example, when you read *Nonlinear Dynamics and Chaos* by Steven Strogatz, he introduces some mathematical ideas to precisely capture nonlinear movements. I think he calls them deterministic mechanisms that are unpredictable: the movements are produced by some deterministic mechanism, but you cannot predict how it's going to move. That is something that really blew his mind, and he wanted to investigate it further. One concept he introduces is phase space, which basically lays open the entire behavior of that system, to put it in a vague way.
 
-Another example is the dual numbers, which Wildberger introduced me to. Dual numbers are part of the Dihedron algebra, and this framework is kind of the environment in which complex numbers are born. When you dig around in this Dihedron algebra, the complex numbers basically fall out of it, because they are a sub-algebra of this algebra.
+Another example is the Dihedron algebra, which has some non-obvious ideas that only emerge after you spend weeks thinking in it and watching what people do with it. The dual numbers live inside this algebra, and it's the environment the complex numbers are born from. When you dig around in it, the complex numbers simply fall out, because they're a sub-algebra.
 
 Or, for example, when you compare that algebra with the algebra of polynomials that are modulo x + 1, you can see that they are isomorphic.
 
