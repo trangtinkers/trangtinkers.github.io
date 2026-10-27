@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adding Machine Table</title>
+<meta name="description" content="A simulated Folk-style table where number cards are parsed into groups and summed live as you move them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one column; a dark physical "table" is the hero, with readouts and notes below it. */
+:root {
+  --bg: #EDF0EC; --surface: #F8F9F6; --ink: #1C2220; --muted: #56615C; --rule: #CBD2CD; --accent: #24735F;
+  --table: #1D2321; --table-edge: #2C3532; --paper: #F3F1E8; --paper-ink: #1C2220; --paper-edge: #D6D2C2;
+  --p1: #4FE0B0; --p2: #A99BFF; --p3: #FF9A6B; --p4: #FF7DB0;
+  --sep: #C9D1CD; --stop: #FF5A55; --warn: #FFC34D; --table-ink: #B9C3BE;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #111513; --surface: #181D1B; --ink: #E4E9E6; --muted: #98A39E; --rule: #2A3330; --accent: #6CC3AB; --table-edge: #36413D; color-scheme: dark }
+}
+:root[data-theme="dark"] { --bg: #111513; --surface: #181D1B; --ink: #E4E9E6; --muted: #98A39E; --rule: #2A3330; --accent: #6CC3AB; --table-edge: #36413D; color-scheme: dark }
+
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 48px; }
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 22px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 6vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+.lede code, li code { font-family: var(--mono); font-size: .9em; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button { font: 500 14px var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible, .card:focus-visible, .page:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { font-size: 13px; color: var(--muted); }
+
+.table { position: relative; height: 310px; background: var(--table); border: 1px solid var(--table-edge); border-radius: 10px; overflow: hidden; user-select: none; -webkit-user-select: none;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05), transparent 70%); }
+.table-label { position: absolute; left: 12px; top: 8px; font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--table-ink); opacity: .6; pointer-events: none; }
+.card { position: absolute; background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 3px; display: flex; align-items: center; justify-content: center;
+  font: 600 22px var(--mono); color: var(--paper-ink); cursor: grab; touch-action: none; z-index: 3; }
+.card.dragging { cursor: grabbing; z-index: 6; }
+.card::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 9px; height: 9px; border: 1.5px solid var(--paper-ink); opacity: .25; }
+.ov { position: absolute; pointer-events: none; z-index: 2; }
+.cap { position: absolute; pointer-events: none; font: 600 12px var(--mono); white-space: nowrap; transform: translateX(-50%); z-index: 4; }
+.page { position: absolute; width: 104px; height: 66px; border-radius: 3px; background: var(--paper); border: 1px solid var(--paper-edge); color: var(--paper-ink);
+  font: 500 12px var(--mono); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; z-index: 3; padding: 0; }
+.page small { font-size: 10px; opacity: .6; }
+.page.off { background: transparent; color: var(--table-ink); border: 1px dashed var(--table-ink); opacity: .55; }
+
+.readout { display: grid; gap: 4px; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+.readout div { font: 400 13px var(--mono); color: var(--muted); white-space: pre; }
+.readout b { color: var(--ink); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 6px; background: var(--table); border: 2px solid; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 20px; margin: 6px 0 0; }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 64ch; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Parsing, on a projected table</span>
+    <h1>Adding Machine Table</h1>
+    <p class="lede">A row of number cards hides a list of lists: <code>0</code> ends a group and <code>0 0</code> ends the input. The parser page draws that structure onto the cards. The summer page adds each group. Move the cards and the projection updates.</p>
+  </header>
+
+  <div class="controls">
+    <button id="add0" type="button">Add a 0 card</button>
+    <button id="reset" type="button">Reset table</button>
+    <span class="hint">Drag cards, or focus one and use the arrow keys. Click a page to lift it off the table.</span>
+  </div>
+
+  <div class="table" id="tbl" aria-label="Simulated table with number cards">
+    <span class="table-label">table · projector on</span>
+    <button class="page" id="pParser" type="button" aria-pressed="true">parser<small>finds groups</small></button>
+    <button class="page" id="pSummer" type="button" aria-pressed="true">summer<small>adds groups</small></button>
+  </div>
+
+  <div class="readout" aria-live="polite">
+    <div id="outRow"></div>
+    <div id="outParse"></div>
+    <div id="outSum"></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="sw" style="border-color: var(--p1)"></span>group</span>
+    <span><span class="sw" style="border-color: var(--sep)"></span>separator 0</span>
+    <span><span class="sw" style="border-color: var(--stop)"></span>stop (0 0)</span>
+    <span><span class="sw" style="border-color: var(--warn); border-style: dashed"></span>needs a 0</span>
+  </div>
+
+  <section>
+    <h2>Things to try</h2>
+    <ul>
+      <li>Drag a <code>0</code> between the 3 and the 4. The group splits in two, with a sum for each half.</li>
+      <li>Drag a separator <code>0</code> out of the row. The groups on either side merge.</li>
+      <li>Pull one card of the <code>0 0</code> pair away. The stop disappears and <code>7 8</code> waits for a closing 0.</li>
+      <li>Lift the summer page. The boxes stay and the sums go: the structure came from the parser.</li>
+      <li>Lift the parser page too. What's left is paper with numbers on it.</li>
+    </ul>
+  </section>
+
+  <footer>Cards are read left to right by their horizontal position, like the Folk parser page that sorts by each card's quad centroid. Here the projection is simulated in the browser.</footer>
+</div>
+
+<script>
+(function () {
+  const tbl = document.getElementById('tbl');
+  const css = getComputedStyle(document.documentElement);
+  const col = name => css.getPropertyValue(name).trim();
+  const palette = ['--p1', '--p2', '--p3', '--p4'];
+  const init = [1, 2, 0, 3, 4, 5, 0, 6, 0, 0, 7, 8];
+  let cards = [], parserOn = true, summerOn = true, W = 44, H = 58;
+
+  function metrics() {
+    const tw = tbl.clientWidth;
+    const step = Math.min(58, (tw - 24) / 12.2);
+    W = Math.round(step * 0.8); H = Math.round(W * 1.32);
+    cards.forEach(c => { c.el.style.width = W + 'px'; c.el.style.height = H + 'px'; c.el.style.fontSize = Math.round(W * 0.48) + 'px'; });
+    const pw = Math.min(104, (tw - 36) / 2);
+    const pp = document.getElementById('pParser'), ps = document.getElementById('pSummer');
+    [pp, ps].forEach(p => { p.style.width = pw + 'px'; p.style.top = (tbl.clientHeight - 80) + 'px'; });
+    ps.style.left = (tw - pw - 12) + 'px'; pp.style.left = (tw - 2 * pw - 22) + 'px';
+    return step;
+  }
+
+  function reset() {
+    cards.forEach(c => c.el.remove());
+    cards = init.map((n, i) => ({ n, fx: 0, fy: 0, i }));
+    cards.forEach(mk);
+    const step = metrics(), tw = tbl.clientWidth;
+    const start = (tw - step * 12 + (step - W)) / 2;
+    cards.forEach((c, i) => { c.fx = (start + i * step) / tw; c.fy = (70 + ((i * 7) % 3) * 3) / tbl.clientHeight; });
+    render();
+  }
+
+  function px(c) { return { x: c.fx * tbl.clientWidth, y: c.fy * tbl.clientHeight }; }
+  function place(c, x, y) {
+    c.fx = Math.max(0, Math.min(tbl.clientWidth - W, x)) / tbl.clientWidth;
+    c.fy = Math.max(0, Math.min(tbl.clientHeight - H, y)) / tbl.clientHeight;
+  }
+
+  function mk(c) {
+    const el = document.createElement('div');
+    el.className = 'card'; el.textContent = c.n; el.tabIndex = 0;
+    el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Card ' + c.n + '. Arrow keys move it.');
+    el.style.width = W + 'px'; el.style.height = H + 'px';
+    c.el = el; tbl.appendChild(el);
+    let ox = 0, oy = 0;
+    el.addEventListener('pointerdown', e => {
+      el.setPointerCapture(e.pointerId); el.classList.add('dragging');
+      const r = tbl.getBoundingClientRect(), p = px(c);
+      ox = e.clientX - r.left - p.x; oy = e.clientY - r.top - p.y;
+    });
+    el.addEventListener('pointermove', e => {
+      if (!el.hasPointerCapture(e.pointerId)) return;
+      const r = tbl.getBoundingClientRect();
+      place(c, e.clientX - r.left - ox, e.clientY - r.top - oy); render();
+    });
+    const end = () => el.classList.remove('dragging');
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('keydown', e => {
+      const d = { ArrowLeft: [-12, 0], ArrowRight: [12, 0], ArrowUp: [0, -12], ArrowDown: [0, 12] }[e.key];
+      if (!d) return;
+      e.preventDefault(); const p = px(c); place(c, p.x + d[0], p.y + d[1]); render();
+    });
+  }
+
+  // Same rules as the Tcl/Folk parser: nonzero joins the group, 0 closes it, 0 0 stops.
+  function parse(row) {
+    const role = new Map(), groups = []; let cur = [];
+    for (let i = 0; i < row.length; i++) {
+      const c = row[i];
+      if (c.n !== 0) { cur.push(c); continue; }
+      if (cur.length) { cur.forEach(k => role.set(k, { r: 'group', g: groups.length })); groups.push(cur); cur = []; }
+      const nx = row[i + 1];
+      if (nx && nx.n === 0) {
+        role.set(c, { r: 'stop' }); role.set(nx, { r: 'stop' });
+        row.slice(i + 2).forEach(k => role.set(k, { r: 'ignored' }));
+        return { role, groups };
+      }
+      role.set(c, { r: 'sep' });
+    }
+    cur.forEach(k => role.set(k, { r: 'unfinished' }));
+    return { role, groups };
+  }
+
+  function ov(style) { const d = document.createElement('div'); d.className = 'ov'; Object.assign(d.style, style); tbl.appendChild(d); }
+  function cap(x, y, text, color) { const d = document.createElement('div'); d.className = 'cap'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.color = color; d.textContent = text; tbl.appendChild(d); }
+  const fmt = g => g.length > 1 ? '{' + g.map(c => c.n).join(' ') + '}' : String(g[0].n);
+  const sum = g => g.reduce((a, c) => a + c.n, 0);
+
+  function render() {
+    tbl.querySelectorAll('.ov,.cap').forEach(e => e.remove());
+    const row = [...cards].sort((a, b) => a.fx - b.fx);
+    cards.forEach(c => { const p = px(c); c.el.style.left = p.x + 'px'; c.el.style.top = p.y + 'px'; c.el.style.opacity = 1; c.el.style.boxShadow = 'none'; });
+    const pp = document.getElementById('pParser'), ps = document.getElementById('pSummer');
+    pp.classList.toggle('off', !parserOn); pp.setAttribute('aria-pressed', parserOn);
+    ps.classList.toggle('off', !summerOn); ps.setAttribute('aria-pressed', summerOn);
+    document.getElementById('outRow').innerHTML = '<b>row on table  </b> ' + row.map(c => c.n).join(' ');
+    const oP = document.getElementById('outParse'), oS = document.getElementById('outSum');
+    if (!parserOn) {
+      oP.innerHTML = '<b>parser claims </b> (page is off the table)';
+      oS.innerHTML = '<b>summer labels </b> (no groups to add)';
+      return;
+    }
+    const { role, groups } = parse(row);
+    groups.forEach((g, i) => {
+      const color = col(palette[i % palette.length]);
+      const ps_ = g.map(px);
+      const x0 = Math.min(...ps_.map(p => p.x)) - 6, x1 = Math.max(...ps_.map(p => p.x)) + W + 6;
+      const y0 = Math.min(...ps_.map(p => p.y)) - 6, y1 = Math.max(...ps_.map(p => p.y)) + H + 6;
+      ov({ left: x0 + 'px', top: y0 + 'px', width: (x1 - x0) + 'px', height: (y1 - y0) + 'px', border: '2px solid ' + color, borderRadius: '6px',
+           background: 'color-mix(in srgb, ' + color + ' 12%, transparent)' });
+      if (summerOn) cap((x0 + x1) / 2, y1 + 5, 'sum ' + sum(g), color);
+    });
+    row.forEach(c => {
+      const r = role.get(c); if (!r) return;
+      const p = px(c);
+      if (r.r === 'sep') c.el.style.boxShadow = '0 0 0 2px ' + col('--sep');
+      if (r.r === 'stop') { c.el.style.boxShadow = '0 0 0 2px ' + col('--stop'); cap(p.x + W / 2, p.y - 20, 'stop', col('--stop')); }
+      if (r.r === 'ignored') c.el.style.opacity = .3;
+      if (r.r === 'unfinished') {
+        ov({ left: (p.x - 5) + 'px', top: (p.y - 5) + 'px', width: (W + 10) + 'px', height: (H + 10) + 'px', border: '2px dashed ' + col('--warn'), borderRadius: '6px' });
+        cap(p.x + W / 2, p.y + H + 8, 'needs a 0', col('--warn'));
+      }
+    });
+    const stopCard = row.find(c => role.get(c) && role.get(c).r === 'stop');
+    if (stopCard) ov({ left: (px(stopCard).x - 5) + 'px', top: '26px', width: '0', height: (tbl.clientHeight - 120) + 'px', borderLeft: '2px dashed ' + col('--stop') });
+    oP.innerHTML = '<b>parser claims </b> ' + (groups.length ? groups.map(fmt).join(' ') : '(no groups)');
+    oS.innerHTML = summerOn ? '<b>summer labels </b> ' + (groups.length ? groups.map(sum).join(' ') : '(nothing to add)') : '<b>summer labels </b> (page is off the table)';
+  }
+
+  document.getElementById('pParser').addEventListener('click', () => { parserOn = !parserOn; render(); });
+  document.getElementById('pSummer').addEventListener('click', () => { summerOn = !summerOn; render(); });
+  document.getElementById('reset').addEventListener('click', () => { parserOn = summerOn = true; reset(); });
+  document.getElementById('add0').addEventListener('click', () => {
+    const c = { n: 0, fx: 0, fy: 0 }; cards.push(c); mk(c); metrics();
+    place(c, 14 + Math.random() * 60, tbl.clientHeight - H - 18); render(); c.el.focus();
+  });
+  window.addEventListener('resize', () => { metrics(); render(); });
+  reset();
+})();
+</script>
+
+</body>
+</html>
