@@ -4,7 +4,7 @@ title: "Math as a Dynamicland"
 date: 2026-10-25
 categories: jekyll update
 ---
-This is part 6 of an [ongoing series on mathematical culture](https://trangla.de/mathematical-culture).
+*This is part 6 of an [ongoing series on mathematical culture](https://trangla.de/mathematical-culture).*
 
 I'd say math is some kind of Dynamicland, in the sense that it is part of the fabric of reality, to make sense of reality itself. For example, when you read *Nonlinear Dynamics and Chaos* by Steven Strogatz, he introduces some mathematical ideas to precisely capture nonlinear movements. I think he calls them deterministic mechanisms that are unpredictable: the movements are produced by some deterministic mechanism, but you cannot predict how it's going to move. That is something that really blew his mind, and he wanted to investigate it further. One concept he introduces is phase space, which basically lays open the entire behavior of that system, to put it in a vague way.
 
