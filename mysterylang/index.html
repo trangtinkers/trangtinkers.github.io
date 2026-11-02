@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mystery languages whiteboard</title>
+<style>
+* { margin: 0; padding: 0; }
+body { background: black; }
+.imagemap { position: relative; margin: 0 auto; max-width: 1400px; }
+.imagemap img { position: relative; display: block; z-index: 0; width: 100%; height: auto; }
+.content { position: absolute; z-index: -1; left: 0; top: 0; width: 100%; font-size: 6px; pointer-events: none; }
+.imagemap a { position: absolute; display: block; z-index: 1; }
+.imagemap a:hover, .reveal .imagemap a { background: rgba(0, 0, 0, 0.25); }
+.reveal .imagemap a:hover { background: rgba(0, 0, 0, 0.45); }
+.header { font: 12px/1 Helvetica, Arial, sans-serif; color: #888; text-align: center; padding: 10px; }
+</style>
+</head>
+<body>
+<div class="imagemap"><img src="hyperphoto.jpg" width="2400" height="1800" alt="">
+<div class="content">
+<p>20261101_163928
+</p>
+<p>20261101_163920
+</p>
+<p>20261101_163934
+</p>
+<p>20261101_163905
+</p>
+<p>20261101_163914
+</p>
+<p>20261101_163938
+</p>
+</div>
+<a href="closes/20261101_163928.jpg" style="left:40.27%;top:8.31%;width:56.66%;height:56.87%;clip-path:polygon(98.92% 100.00%, 0.00% 98.43%, 0.41% 0.95%, 100.00% 0.00%);" title="20261101_163928"></a>
+<a href="closes/20261101_163920.jpg" style="left:14.54%;top:38.11%;width:57.41%;height:56.72%;clip-path:polygon(100.00% 98.26%, 0.00% 100.00%, 2.41% 2.50%, 95.67% 0.00%);" title="20261101_163920"></a>
+<a href="closes/20261101_163934.jpg" style="left:69.75%;top:40.04%;width:23.84%;height:23.75%;clip-path:polygon(99.40% 100.00%, 0.00% 96.17%, 2.62% 0.87%, 100.00% 0.00%);" title="20261101_163934"></a>
+<a href="closes/20261101_163905.jpg" style="left:9.01%;top:28.52%;width:23.03%;height:22.95%;clip-path:polygon(97.95% 3.52%, 100.00% 97.18%, 0.00% 100.00%, 1.23% 0.00%);" title="20261101_163905"></a>
+<a href="closes/20261101_163914.jpg" style="left:8.51%;top:51.12%;width:22.11%;height:21.98%;clip-path:polygon(97.74% 0.65%, 100.00% 96.99%, 0.00% 100.00%, 0.90% 0.00%);" title="20261101_163914"></a>
+<a href="closes/20261101_163938.jpg" style="left:72.26%;top:59.41%;width:21.95%;height:21.72%;clip-path:polygon(100.00% 100.00%, 0.00% 99.55%, 2.41% 4.29%, 95.80% 0.00%);" title="20261101_163938"></a>
+</div>
+<div class="header">Hold shift to show all links.</div>
+<script>
+let modifiers = { "16":1, "17":1, "91":1, "93":1 }  // shift, control, left command, right command
+window.addEventListener("keydown", function (e) { if (modifiers[e.keyCode+""]) { document.body.classList.add("reveal"); }});
+window.addEventListener("keyup", function (e) { if (modifiers[e.keyCode+""]) { document.body.classList.remove("reveal"); }});
+window.addEventListener("blur", function (e) { document.body.classList.remove("reveal"); });
+</script>
+</body>
+</html>
